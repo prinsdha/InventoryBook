@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:product/core/constant/app_colors.dart';
 import 'package:product/core/constant/app_settings.dart';
 import 'package:product/core/utils/config.dart';
@@ -83,29 +84,63 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
   TextFormField buildTextFormField() {
     return TextFormField(
       controller: widget.textEditingController,
-      obscureText: getObSecureText(),
+      obscureText: getObSecureText,
       focusNode: _focusNode,
-      validator: getValidation(),
-      keyboardType: getKeyboardType(),
-      maxLines: maxLine(),
-      style: inputTextStyle(),
-      enabled: getEnabled(),
+      validator: getValidation,
+      keyboardType: getKeyboardType,
+      maxLines: maxLine,
+      style: inputTextStyle,
+      enabled: getEnabled,
+      maxLength: getMaxLength,
       onChanged: widget.onEditing,
-      textCapitalization: getTextCapitalization(),
+      textCapitalization: getTextCapitalization,
       textInputAction: widget.textInputAction,
+      inputFormatters: getTextInputFormatter,
+      buildCounter: (BuildContext context,
+              {required int currentLength,
+              required bool isFocused,
+              required int? maxLength}) =>
+          null,
       decoration: InputDecoration(
         contentPadding:
             EdgeInsets.zero.copyWith(left: 10, right: 10, top: 7, bottom: 7),
         label: Text(
-          getLabelText(),
+          getLabelText,
         ),
-        enabledBorder: inputBorder(),
-        disabledBorder: inputBorder(),
-        labelStyle: inputTextStyle(),
-        border: inputBorder(),
-        focusedBorder: inputBorder(),
+        enabledBorder: inputBorder,
+        disabledBorder: inputBorder,
+        labelStyle: inputTextStyle,
+        border: inputBorder,
+        focusedBorder: inputBorder,
       ),
     );
+  }
+
+  List<TextInputFormatter>? get getTextInputFormatter {
+    switch (widget.textFieldType) {
+      case TextFieldType.stockUnit:
+      case TextFieldType.unit:
+      case TextFieldType.quantity:
+      case TextFieldType.price:
+      case TextFieldType.discountedPrice:
+        return [FilteringTextInputFormatter.digitsOnly];
+      default:
+        return null;
+    }
+  }
+
+  int? get getMaxLength {
+    switch (widget.textFieldType) {
+      case TextFieldType.unit:
+      case TextFieldType.stockUnit:
+      case TextFieldType.quantity:
+        return 3;
+      case TextFieldType.price:
+      case TextFieldType.discountedPrice:
+        return 5;
+      default:
+        return null;
+    }
   }
 
   Widget searchField() {
@@ -124,7 +159,8 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
           ]),
       child: TextField(
         controller: widget.textEditingController,
-        textCapitalization: getTextCapitalization(),
+        textCapitalization: getTextCapitalization,
+        onChanged: widget.onEditing,
         decoration: InputDecoration(
             prefixIcon: const Icon(
               Icons.search,
@@ -135,12 +171,12 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
               color: Colors.black,
             ),
             border: InputBorder.none,
-            hintText: getLabelText()),
+            hintText: getLabelText),
       ),
     );
   }
 
-  bool getEnabled() {
+  bool get getEnabled {
     switch (widget.textFieldType) {
       case TextFieldType.category:
         return false;
@@ -149,17 +185,17 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
     }
   }
 
-  TextStyle inputTextStyle() {
+  TextStyle get inputTextStyle {
     return TextStyle(color: Colors.black, fontSize: getWidth(14));
   }
 
-  InputBorder inputBorder() {
+  InputBorder get inputBorder {
     return OutlineInputBorder(
         borderRadius: BorderRadius.circular(7),
         borderSide: const BorderSide(color: Colors.black, width: 1));
   }
 
-  int? maxLine() {
+  int? get maxLine {
     switch (widget.textFieldType) {
       case TextFieldType.description:
         return null;
@@ -168,11 +204,11 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
     }
   }
 
-  bool getObSecureText() {
+  bool get getObSecureText {
     return false;
   }
 
-  String getLabelText() {
+  String get getLabelText {
     switch (widget.textFieldType) {
       case TextFieldType.itemName:
         return "Product Name";
@@ -195,7 +231,7 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
     }
   }
 
-  TextInputType getKeyboardType() {
+  TextInputType get getKeyboardType {
     switch (widget.textFieldType) {
       case TextFieldType.price:
       case TextFieldType.discountedPrice:
@@ -213,11 +249,11 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
     }
   }
 
-  TextCapitalization getTextCapitalization() {
+  TextCapitalization get getTextCapitalization {
     return TextCapitalization.sentences;
   }
 
-  getValidation() {
+  String? Function(String?)? get getValidation {
     return (val) => val!.trim().isEmpty ? "Field is required" : null;
   }
 }

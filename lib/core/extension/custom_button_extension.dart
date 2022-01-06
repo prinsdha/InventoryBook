@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:product/core/utils/config.dart';
 import 'package:product/ui/shared/custom_button.dart';
 
-enum CustomButtonType { addItem, shareButton, addProduct, update }
+enum CustomButtonType {
+  addItem,
+  shareButton,
+  addProduct,
+  update,
+  updateProduct
+}
 
 extension CustomButtonExtension on CustomButtonType {
   ButtonProps get props {
@@ -34,6 +40,16 @@ extension CustomButtonExtension on CustomButtonType {
           radius: 50,
           child: const Text(
             "Add Item",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        );
+      case CustomButtonType.updateProduct:
+        return ButtonProps(
+          height: 45,
+          margin: const EdgeInsets.symmetric(horizontal: 15),
+          radius: 50,
+          child: const Text(
+            "Update Item",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         );

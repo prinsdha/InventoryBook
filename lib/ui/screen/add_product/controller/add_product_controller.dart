@@ -6,7 +6,6 @@ import 'package:product/main.dart';
 import 'package:product/ui/screen/add_product/model/category_model.dart';
 import 'package:product/ui/screen/add_product/model/product_detail_model.dart';
 import 'package:product/ui/screen/home/controller/home_controller.dart';
-import 'package:product/ui/screen/home/home_screen.dart';
 
 class AddProductController extends GetxController {
   String? _productImage;
@@ -40,7 +39,8 @@ class AddProductController extends GetxController {
   HomeController homeController = Get.find<HomeController>();
   late ProductDetailModel productDetailModel;
 
-  saveDataToModel() {
+  void saveDataToModel() {
+    disposeKeyboard();
     productDetailModel = ProductDetailModel(
         image: productImage!,
         description: description.text.trim(),
@@ -51,41 +51,68 @@ class AddProductController extends GetxController {
         stockUnit: int.parse(stockUnit.text.trim()),
         scale2: scale2.text.trim(),
         scale: scale.text.trim(),
-        categoryModel: categoryModel);
-    if (!homeController.allProducts.containsKey(categoryModel.name)) {
-      homeController.allProducts.putIfAbsent(
-          categoryModel.name,
-          () => CategoryModel(
-              name: categoryModel.name,
-              image: categoryModel.image,
-              productDetailModel: [productDetailModel]));
+        categoryModel: categoryModel,
+        dateTime: DateTime.now());
+    if (Get.arguments != null) {
+      ProductDetailModel data = Get.arguments[0];
+      homeController.allProducts[data.categoryModel.name]!
+          .productDetailModel![Get.arguments[1]] = productDetailModel;
+      Get.back();
     } else {
-      homeController.allProducts.update(categoryModel.name, (value) {
-        List<ProductDetailModel> list = value.productDetailModel ?? [];
-        for (var element in list) {
-          if (element.name.toLowerCase() !=
-              productDetailModel.name.toLowerCase()) {
-            list.add(productDetailModel);
-            break;
-          } else {
-            flutterToast("Item already present");
-            break;
+      if (!homeController.allProducts.containsKey(categoryModel.name)) {
+        homeController.allProducts.putIfAbsent(
+            categoryModel.name,
+            () => CategoryModel(
+                name: categoryModel.name,
+                searchText: productDetailModel.name,
+                image: categoryModel.image,
+                productDetailModel: [productDetailModel]));
+      } else {
+        homeController.allProducts.update(categoryModel.name, (value) {
+          List<ProductDetailModel> list = value.productDetailModel ?? [];
+          String str = value.searchText ?? "";
+          for (var element in list) {
+            if (element.name.toLowerCase() !=
+                productDetailModel.name.toLowerCase()) {
+              str = str + " ${productDetailModel.name}";
+              list.add(productDetailModel);
+              Get.back();
+              break;
+            } else {
+              flutterToast("Item already present");
+              break;
+            }
           }
-        }
-        value.productDetailModel = list;
-        return value;
-      });
+          value.productDetailModel = list;
+          value.searchText = str;
+          return value;
+        });
+      }
     }
     homeController.update();
-    Get.back();
   }
 
   @override
   void onInit() {
-    scale.text = scaleList[0];
-    scale2.text = scaleList[0];
-    categoryModel = fixCategory[0];
-    category.text = categoryModel.name;
+    if (Get.arguments != null) {
+      productDetailModel = Get.arguments[0];
+      scale.text = productDetailModel.scale;
+      scale2.text = productDetailModel.scale2;
+      categoryModel = productDetailModel.categoryModel;
+      category.text = productDetailModel.categoryModel.name;
+      productImage = productDetailModel.image;
+      actualPrice.text = productDetailModel.actualPrice;
+      discountedPrice.text = productDetailModel.discountedPrice;
+      unit.text = productDetailModel.unit.toString();
+      stockUnit.text = productDetailModel.stockUnit.toString();
+      description.text = productDetailModel.description;
+      itemName.text = productDetailModel.name;
+    } else {
+      scale.text = scaleList[0];
+      scale2.text = scaleList[0];
+      categoryModel = fixCategory[0];
+      category.text = categoryModel.name;
+    }
     super.onInit();
   }
 }

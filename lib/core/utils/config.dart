@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 class SizeConfig {
   static late MediaQueryData mediaQueryData;
+  static late BuildContext context;
   static late double height;
   static late double width;
-  static init(BuildContext context) {
+  static init(BuildContext con) {
+    context = con;
     mediaQueryData = MediaQuery.of(context);
     height = mediaQueryData.size.height;
     width = mediaQueryData.size.width;
