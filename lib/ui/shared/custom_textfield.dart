@@ -86,7 +86,7 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
       controller: widget.textEditingController,
       obscureText: getObSecureText,
       focusNode: _focusNode,
-      validator: getValidation,
+      validator: widget.validator ?? getValidation,
       keyboardType: getKeyboardType,
       maxLines: maxLine,
       style: inputTextStyle,
@@ -107,6 +107,7 @@ class _CustomAppTextFieldState extends State<CustomAppTextField> {
         label: Text(
           getLabelText,
         ),
+        errorMaxLines: 3,
         enabledBorder: inputBorder,
         disabledBorder: inputBorder,
         labelStyle: inputTextStyle,

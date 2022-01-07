@@ -14,4 +14,5 @@ class CategoryModel {
       required this.image,
       this.productDetailModel,
       this.isExpanded = false});
+
 }

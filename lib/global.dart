@@ -2,7 +2,7 @@ import 'package:product/ui/screen/add_product/model/category_model.dart';
 
 List<String> scaleList = [
   "Kgs",
-  "Grams",
+  "Gms",
 ];
 
 List<String> dayFilterList = [

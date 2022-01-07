@@ -11,7 +11,7 @@ flutterToast(String msg) async {
 }
 
 void disposeKeyboard() {
-  return FocusManager.instance.primaryFocus?.unfocus();
+  return FocusManager.instance.primaryFocus!.unfocus();
 }
 
 String getDayOfMonthSuffix(int dayNum) {

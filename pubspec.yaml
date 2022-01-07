@@ -41,6 +41,8 @@ dependencies:
   fluttertoast: ^8.0.8
   intl: ^0.17.0
   dropdown_button2: ^1.0.7
+  share_plus: ^3.0.4
+  get_storage: ^2.0.3
 
 
 dev_dependencies:
