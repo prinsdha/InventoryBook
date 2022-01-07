@@ -31,17 +31,20 @@ class InventoryController extends GetxController {
     if (currentSort == dayFilterList[0]) {
       return homeController.listOfProducts
           .where((element) =>
-              DateTime.now().difference(element.dateTime).inDays > 7)
+              element.dateTime.isAfter(startDate) &&
+              element.dateTime.isBefore(endDate))
           .toList();
     } else if (currentSort == dayFilterList[1]) {
       return homeController.listOfProducts
           .where((element) =>
-              DateTime.now().difference(element.dateTime).inDays > 30)
+              element.dateTime.month ==
+              DateTime(DateTime.now().year, DateTime.now().month - 1).month)
           .toList();
     } else if (currentSort == dayFilterList[2]) {
       return homeController.listOfProducts
           .where((element) =>
-              DateTime.now().difference(element.dateTime).inDays > 365)
+              element.dateTime.year ==
+              DateTime(DateTime.now().year - 1, DateTime.now().month).year)
           .toList();
     } else if (currentSort == dayFilterList[3]) {
       return homeController.listOfProducts
@@ -63,3 +66,8 @@ class InventoryController extends GetxController {
     }
   }
 }
+
+DateTime get mostRecentMonday => DateTime(DateTime.now().year,
+    DateTime.now().month, DateTime.now().day - (DateTime.now().weekday - 1));
+DateTime startDate = mostRecentMonday.subtract(const Duration(days: 8));
+DateTime endDate = mostRecentMonday;

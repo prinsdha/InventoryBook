@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:product/core/utils/app_function.dart';
 import 'package:product/core/utils/config.dart';
 
 import 'custom_textfield.dart';
@@ -69,6 +70,9 @@ class _CustomDropDownFiledState extends State<CustomDropDownFiled> {
               ),
               style: inputTextStyle(),
               isDense: true,
+              onTap: () {
+                disposeKeyboard();
+              },
               onChanged: (newValue) {
                 setState(() {
                   currentSelectedValue = newValue;

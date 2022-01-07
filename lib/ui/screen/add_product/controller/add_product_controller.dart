@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:product/core/utils/app_function.dart';
+import 'package:product/core/utils/shared-prefrences.dart';
 import 'package:product/global.dart';
 import 'package:product/main.dart';
 import 'package:product/ui/screen/add_product/model/category_model.dart';
@@ -40,7 +43,6 @@ class AddProductController extends GetxController {
   late ProductDetailModel productDetailModel;
 
   void saveDataToModel() {
-    disposeKeyboard();
     productDetailModel = ProductDetailModel(
         image: productImage!,
         description: description.text.trim(),
@@ -67,6 +69,7 @@ class AddProductController extends GetxController {
                 searchText: productDetailModel.name,
                 image: categoryModel.image,
                 productDetailModel: [productDetailModel]));
+        Get.back();
       } else {
         homeController.allProducts.update(categoryModel.name, (value) {
           List<ProductDetailModel> list = value.productDetailModel ?? [];

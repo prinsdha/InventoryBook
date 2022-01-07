@@ -39,7 +39,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       body: Form(
         key: formKey,
         child: ListView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           children: [
             GetBuilder(
               builder: (AddProductController controller) => GestureDetector(
@@ -48,7 +48,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   controller.pickImage();
                 },
                 child: Container(
-                  height: 70,
+                  height: 140,
                   width: SizeConfig.width,
                   child: addProductController.productImage != null
                       ? Image.file(
@@ -87,6 +87,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       Expanded(
                         child: CustomAppTextField(
+                            validator: (val) => val!.trim().isNotEmpty
+                                ? int.parse(val) <
+                                        int.parse(addProductController
+                                            .actualPrice.text
+                                            .trim())
+                                    ? null
+                                    : "Discounted price less than actual price"
+                                : "Field is required",
                             textEditingController:
                                 addProductController.discountedPrice,
                             textFieldType: TextFieldType.discountedPrice),
@@ -118,6 +126,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         children: fixCategory
                             .map((e) => GestureDetector(
                                   onTap: () {
+                                    disposeKeyboard();
                                     addProductController.category.text = e.name;
                                     addProductController.categoryModel = e;
                                   },

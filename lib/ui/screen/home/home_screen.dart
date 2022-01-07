@@ -13,6 +13,7 @@ import 'package:product/ui/screen/home/widget/main_list_tile.dart';
 import 'package:product/ui/shared/custom_button.dart';
 import 'package:product/ui/shared/custom_textfield.dart';
 import 'package:product/ui/shared/doubleTaptoback.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "/homeScreen";
@@ -147,11 +148,27 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               children: [
                 Expanded(
-                    child: CustomButton(
-                        type: CustomButtonType.shareButton,
-                        onTap: () {
-                          disposeKeyboard();
-                        })),
+                  child: CustomButton(
+                    type: CustomButtonType.shareButton,
+                    onTap: () {
+                      disposeKeyboard();
+                      if (homeController.searchedProduct.isNotEmpty) {
+                        String shareNote = "";
+                        homeController.searchedProduct.forEach((key, value) {
+                          int i = 0;
+                          String str = "$key\n";
+                          for (var e in value.productDetailModel!) {
+                            i += 1;
+                            str = str +
+                                "($i)${e.name}(${e.unit}${e.scale})\nprice:${e.discountedPrice}\nstock:${e.stockUnit}${e.scale2}\n";
+                          }
+                          shareNote = shareNote + str + "\n";
+                        });
+                        Share.share(shareNote);
+                      }
+                    },
+                  ),
+                ),
                 const SizedBox(
                   width: 10,
                 ),

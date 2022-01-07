@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'product',
+      title: 'My Products',
       theme: AppTheme.defTheme,
       initialBinding: Binding(),
       debugShowCheckedModeBanner: false,
